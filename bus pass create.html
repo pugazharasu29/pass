@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('pngtree-travel-bus-on-the-way-image_16005789.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .bus-pass {
+            width: 400px;
+            height: 250px;
+            background: rgba(224, 173, 230, 0.9); /* Light Blue */
+            background-image: url('Screenshot_2025-02-27_214453-removebg-preview.png'); /* Watermark */
+            background-size: 150px;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 2px solid rgb(4, 4, 4);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+        }
+        .photo {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 100px;
+            background: white;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .content {
+            margin-left: 100px;
+            text-align: left;
+        }
+        .menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .qr-container {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bus-pass">
+        <div class="menu" onclick="toggleQR()">&#x22EE;</div>
+        <div class="photo" id="photo">Photo</div>
+        <div class="content">
+            <p>Name: <span id="name">John Doe</span></p>
+            <p>Pass ID: <span id="pass-id">123456</span></p>
+            <p>Valid Till: <span id="valid">31-12-2025</span></p>
+        </div>
+        <div class="qr-container" id="qr-container"></div>
+    </div>
+    <script>
+        function toggleQR() {
+            var qrContainer = document.getElementById("qr-container");
+            if (qrContainer.style.display === "none" || qrContainer.style.display === "") {
+                qrContainer.style.display = "block";
+                qrContainer.innerHTML = "";
+                new QRCode(qrContainer, {
+                    text: document.getElementById("pass-id").innerText,
+                    width: 60,
+                    height: 60
+                });
+            } else {
+                qrContainer.style.display = "none";
+                qrContainer.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>

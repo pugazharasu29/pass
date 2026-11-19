@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass Generator - DIGI BUS PASS</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            min-height: 100vh;
+            background: url('pngtree-travel-bus-on-the-way-image_16005789.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+        }
+
+        nav {
+            background-color: whitesmoke;
+            color: #000000;
+            padding: 13px 20px;
+            width: 100%;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        nav .title {
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bolder;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav li {
+            font-size: 18px;
+        }
+
+        nav a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: grey;
+        }
+
+        .redirect-banner {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .redirect-banner button {
+            background: white;
+            color: #28a745;
+            border: none;
+            padding: 6px 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .redirect-banner button:hover {
+            background: #f0f0f0;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .bus-pass {
+            display: flex;
+            border: 3px solid darkblue;
+            padding: 25px;
+            width: 720px;
+            background-color: lightblue;
+            box-shadow: 0 0 15px rgba(0, 0, 139, 0.3);
+            position: relative;
+            margin: 20px;
+            opacity: 0.95;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .bus-pass::before {
+            content: "DIGIBUSPASS";
+            position: absolute;
+            opacity: 0.1;
+            font-size: 80px;
+            color: darkblue;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            z-index: 1;
+            pointer-events: none;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pass-image {
+            width: 170px;
+            height: 210px;
+            background-color: #e6f0ff;
+            margin-right: 25px;
+            border: 2px solid darkblue;
+            overflow: hidden;
+            border-radius: 6px;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .pass-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pass-details {
+            flex: 1;
+            text-align: left;
+            font-weight: bold;
+            color: darkblue;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pass-details h2 {
+            margin: 0 0 12px;
+            font-size: 26px;
+            text-decoration: underline;
+            text-transform: uppercase;
+        }
+
+        .pass-details p {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #qrCodeContainer {
+            background: white;
+            padding: 8px;
+            border: 2px solid darkblue;
+            border-radius: 6px;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrCodeContainer img,
+        #qrCodeContainer canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            z-index: 10;
+        }
+
+        .btn-action {
+            background-color: darkblue;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-action:hover {
+            background-color: #00008b;
+        }
+
+        .btn-home {
+            background-color: #008CBA;
+        }
+
+        .btn-home:hover {
+            background-color: #005f73;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="title">
+            DIGI BUS PASS
+            <img src="png-transparent-public-transport-bus-service-travel-transit-bus-bus-logo-angle-hat-logo.png"
+                height="34" width="34">
+        </div>
+        <ul>
+            <li><a href="index.html">Home |</a></li>
+            <li><a href="passanger.html">Passenger |</a></li>
+            <li><a href="conductor.html">Conductor |</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="redirect-banner" id="redirectBanner">
+        <span>Pass Created Successfully! Redirecting to Home Page in <span id="countdown">5</span> seconds...</span>
+        <button onclick="redirectToHome()">Go to Home Page Now</button>
+    </div>
+
+    <div class="main-container">
+        <div class="bus-pass" id="busPass">
+            <div class="pass-image">
+                <img id="passPhoto" src="" alt="Passenger Photo">
+            </div>
+
+            <div class="pass-details">
+                <h2 id="passName">Loading...</h2>
+                <p><strong>Pass ID:</strong> <span id="passId"></span></p>
+                <p><strong>Date of Birth:</strong> <span id="passDob"></span></p>
+                <p><strong>Gender:</strong> <span id="passGender"></span></p>
+                <p><strong>Mobile:</strong> <span id="passMobile"></span></p>
+                <p><strong>Email:</strong> <span id="passEmail"></span></p>
+                <p><strong>Pass Category:</strong> <span id="passCategory"></span></p>
+                <p><strong>Pass Type:</strong> <span id="passType"></span></p>
+                <p><strong>Validity:</strong> <span id="passValidity"></span></p>
+                <p><strong>Route:</strong> <span id="passRoute"></span></p>
+            </div>
+
+            <div class="qr-section">
+                <div id="qrCodeContainer"></div>
+                <p style="color: darkblue; font-weight: bold; margin-top: 5px; font-size: 12px;">SCAN PASS</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-action" onclick="downloadPassAsPdf()">Download Pass as PDF</button>
+            <a href="index.html" class="btn-action btn-home">Return to Home Page</a>
+        </div>
+    </div>
+
+    <script>
+        let autoRedirectTimer = null;
+
+        function redirectToHome() {
+            if (autoRedirectTimer) clearInterval(autoRedirectTimer);
+            window.location.href = 'index.html';
+        }
+
+        function startAutoRedirectCountdown() {
+            let seconds = 5;
+            const countdownEl = document.getElementById('countdown');
+            autoRedirectTimer = setInterval(() => {
+                seconds--;
+                if (countdownEl) countdownEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(autoRedirectTimer);
+                    window.location.href = 'index.html';
+                }
+            }, 1000);
+        }
+
+        async function fetchPassData() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const passId = urlParams.get('id');
+                const apiUrl = passId ? `get_pass_data.php?id=${passId}` : 'get_pass_data.php';
+
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.status !== "success" || !data.passData) {
+                    throw new Error(data.message || 'Pass data not found');
+                }
+
+                displayPass(data.passData);
+
+                // Start countdown to redirect to home page automatically
+                startAutoRedirectCountdown();
+                return true;
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showErrorMessage(error.message);
+                return false;
+            }
+        }
+
+        function showErrorMessage(message) {
+            document.getElementById('redirectBanner').style.display = 'none';
+            const busPass = document.getElementById('busPass');
+            busPass.innerHTML = `
+            <div style="text-align:center; padding:30px; width:100%; color:red;">
+                <h3>Error Loading Pass</h3>
+                <p style="margin:15px 0;">${message}</p>
+                <a href="digibusform.html" class="btn-action">Apply For Pass</a>
+                <a href="index.html" class="btn-action btn-home">Go to Home Page</a>
+            </div>
+        `;
+        }
+
+        function displayPass(passData) {
+            document.getElementById('passId').textContent = passData.id ? `DBP-${String(passData.id).padStart(6, '0')}` : 'N/A';
+            document.getElementById('passName').textContent = passData.full_name || passData.name || 'N/A';
+            document.getElementById('passDob').textContent = passData.dob || 'N/A';
+            document.getElementById('passGender').textContent = passData.gender || 'N/A';
+            document.getElementById('passMobile').textContent = passData.mobile_number || 'N/A';
+            document.getElementById('passEmail').textContent = passData.email || 'N/A';
+            document.getElementById('passCategory').textContent = passData.pass_category || 'N/A';
+            document.getElementById('passType').textContent = passData.pass_type || 'N/A';
+            document.getElementById('passValidity').textContent = `${passData.start_date || ''} to ${passData.end_date || ''}`;
+            document.getElementById('passRoute').textContent = `${passData.route_number || ''} (${passData.source_location || ''} to ${passData.destination_location || ''})`;
+
+            const photoImg = document.getElementById('passPhoto');
+            photoImg.onerror = function () {
+                this.src = 'user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg';
+            };
+            photoImg.src = passData.photo && passData.photo.trim() !== '' ? passData.photo : 'user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg';
+
+            // Generate Automatic QR Code payload containing structured JSON
+            const qrPayload = JSON.stringify({
+                id: passData.id || 1,
+                name: passData.full_name || passData.name,
+                pass_type: passData.pass_type,
+                validity: `${passData.start_date} to ${passData.end_date}`,
+                route: `${passData.route_number} (${passData.source_location} to ${passData.destination_location})`,
+                mobile: passData.mobile_number
+            });
+
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.innerHTML = '';
+            if (typeof QRCode === 'function') {
+                new QRCode(qrContainer, {
+                    text: qrPayload,
+                    width: 120,
+                    height: 120
+                });
+            } else {
+                qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrPayload)}" alt="QR Code">`;
+            }
+        }
+
+        async function downloadPassAsPdf() {
+            try {
+                if (autoRedirectTimer) clearInterval(autoRedirectTimer);
+
+                const element = document.getElementById('busPass');
+                const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, imgWidth, imgHeight);
+                pdf.save(`BusPass_${document.getElementById('passName').textContent}.pdf`);
+
+                // Redirect to home page after downloading PDF
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Could not download PDF. Redirecting to home page...');
+                window.location.href = 'index.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPassData);
+    </script>
+</body>
+
+</html>

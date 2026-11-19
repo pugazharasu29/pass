@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Bus Pass</title>
+    <style>
+         body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            min-height: 100vh;
+            background: url('pngtree-travel-bus-on-the-way-image_16005789.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff;
+        }
+        .bus-pass {
+            display: flex;
+            border: 3px solid darkblue;
+            padding: 25px;
+            width: 700px;
+            background-color: lightblue;
+            box-shadow: 0 0 15px rgba(0, 0, 139, 0.3);
+            position: relative;
+            margin: 20px;
+        }
+        .pass-image {
+            width: 180px;
+            height: 220px;
+            background-color: #e6f0ff;
+            margin-right: 30px;
+            border: 2px solid darkblue;
+            overflow: hidden; /* Ensure photo doesn't overflow */
+        }
+        .pass-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Change to 'contain' if you want full photo visible */
+        }
+        .pass-details {
+            flex: 1;
+            text-align: left;
+            font-weight: bold;
+            color: darkblue;
+        }
+        .pass-details h2 {
+            margin: 0 0 15px;
+            font-size: 28px;
+            text-decoration: underline;
+            text-transform: uppercase;
+        }
+        .pass-details p {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+        .qr-code {
+            margin-top: 25px;
+            text-align: center;
+            border-top: 2px solid darkblue;
+            padding-top: 15px;
+        }
+        .qr-code img {
+            width: 120px;
+            height: 120px;
+            border: 2px solid darkblue;
+            padding: 5px;
+            background: white;
+        }
+        .download-button {
+            margin-top: 25px;
+            text-align: center;
+        }
+        .download-button button {
+            background-color: darkblue;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .download-button button:hover {
+            background-color: #00008b;
+        }
+    </style>
+</head>
+<body>
+    <div class="bus-pass" id="busPass">
+         <!-- Pass image (inverted rectangle) -->
+         <div class="pass-image">
+            <img id="passPhoto" src="" alt="Passenger Photo">
+        </div>
+        <!-- Pass details -->
+        <div class="pass-details">
+            <h2 id="passName"></h2>
+            <p><strong>Date of Birth:</strong> <span id="passDob"></span></p>
+            <p><strong>Gender:</strong> <span id="passGender"></span></p>
+            <p><strong>Mobile Number:</strong> <span id="passMobile"></span></p>
+            <p><strong>Email:</strong> <span id="passEmail"></span></p>
+            <p><strong>Pass Category:</strong> <span id="passCategory"></span></p>
+            <p><strong>Pass Type:</strong> <span id="passType"></span></p>
+            <p><strong>Validity:</strong> <span id="passValidity"></span></p>
+            <p><strong>Route:</strong> <span id="passRoute"></span></p>
+            <!-- QR Code -->
+            <div class="qr-code">
+                <img id="passQrCode" src="" alt="QR Code">
+            </div>
+        </div>
+    </div>
+    <!-- Download Button -->
+    <div class="download-button">
+        <button onclick="downloadPassAsPdf()">Download Pass as PDF</button>
+    </div>
+    </div>
+
+    <script>
+    // QR scan handling
+    function handleQRScan() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const passData = JSON.parse(decodeURIComponent(urlParams.get('data')));
+            
+            if (!passData) throw new Error('Invalid QR code data');
+            displayPass(passData);
+
+        } catch (error) {
+            console.error('QR Scan Error:', error);
+            showErrorMessage('Invalid pass QR code: ' + error.message);
+        }
+    }
+
+    // Initialize QR pass view
+    document.addEventListener('DOMContentLoaded', handleQRScan);
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Copy the same head section from your existing HTML -->
+    <title>Digital Bus Pass</title>
+    <style>
+        /* Copy the same CSS from your existing HTML */
+    </style>
+</head>
+<body>
+    <div class="bus-pass" id="busPass">
+        <!-- Same pass structure as your existing HTML -->
+    </div>
+
+    <script>
+    // Function to parse URL parameters
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const passData = params.get('data');
+        if (!passData) return null;
+        
+        try {
+            return JSON.parse(decodeURIComponent(passData));
+        } catch (e) {
+            console.error('Error parsing pass data:', e);
+            return null;
+        }
+    }
+
+    // Function to display pass from QR data
+    function displayPassFromQR() {
+        const passData = getUrlParams();
+        if (!passData) {
+            showErrorMessage('Invalid or missing pass data');
+            return;
+        }
+        displayPass(passData);
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        displayPassFromQR();
+    });
+    </script>
+</body>
+</html>

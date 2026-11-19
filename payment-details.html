@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Details</title>
+    <style>
+        .form-container {
+            background: rgba(255, 255, 255, 0.8); /* Light background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Dark shadow */
+            width: 100%;
+            max-height: 100vh;
+            box-sizing: border-box;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="date"], input[type="email"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-code img {
+            width: 150px; /* Adjust width as needed */
+            height: 150px; /* Adjust height as needed */
+        }
+        .upi-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            display: none; /* Initially hide payment options */
+        }
+        .upi-option {
+            width: 60px;
+            height: 60px;
+        }
+        #data-display {
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"], input[type="button"] {
+            background: black; /* Changed button color to black */
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background: #333; /* Slightly lighter black on hover */
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <script>
+      
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchPaymentDetails();
+    });
+
+    function fetchPaymentDetails() {
+        fetch("fetch_payment.php")
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Display payment details
+                    document.getElementById("payment-mode").textContent = data.payment.payment_mode;
+                    document.getElementById("amount").textContent = data.payment.amount;
+                    document.getElementById("transaction-id").textContent = data.payment.transaction_id || "N/A";
+                    document.getElementById("payment-date").textContent = data.payment.payment_date;
+                } else {
+                    alert("No payment details found!");
+                }
+            })
+            .catch(error => console.error("Error fetching payment details:", error));
+    }
+
+</script>
+</head>
+<body>
+    <div class="form-container">
+        <form id="paymentDetailsForm" action="save_payment.php" onsubmit="event.preventDefault(); savePaymentData();">
+            <h2>Payment Details</h2>
+            <div class="form-group">
+                <label for="payment-mode">Payment Mode:</label>
+                <select id="payment-mode" name="payment-mode" required onchange="toggleQR()">
+                    <option value="online">Online Payment (UPI, Net Banking, Debit/Credit Card)</option>
+                    <option value="cash">Cash</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label for="transaction-id">Transaction ID (For online payments):</label>
+                <input type="text" id="transaction-id" name="transaction-id">
+            </div>
+            <div class="qr-code">
+                <label for="qr-code">Scan QR Code to Pay:</label>
+                <img src="Screenshot 2025-01-27 095551.png" alt="QR Code" id="qr-code" onclick="showPaymentOptions()">
+            </div>
+            <div class="upi-options" id="upi-options">
+                <img src="Google_Pay_GPay_Logo-512.webp" alt="GPay" class="upi-option">
+                <img src="phonepe_logo-freelogovectors.net_.png" alt="PhonePe" class="upi-option">
+                <img src="channels4_profile (1).jpg" alt="Paytm" class="upi-option">
+                </div>
+                <div class="submit-container">
+                    <input type="button" value="Previous" onclick="window.history.back();">
+                    <input type="submit" value="Next">
+                </div>
+        </form>
+    </div>
+</body>
+</html>

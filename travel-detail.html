@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Details</title>
+    <style>
+        .form-container {
+            background: rgba(255, 255, 255, 0.8); /* Light background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Dark shadow */
+            width: 100%;
+            max-height: 100vh;
+            box-sizing: border-box;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .submit-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        input[type="submit"], input[type="button"] {
+            background: black; /* Changed button color to black */
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background: #333; /* Slightly lighter black on hover */
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <script>
+        fetch("fetch_travel_details.php")
+  .then(response => response.json())
+  .then(data => {
+      if (data.status === "success") {
+          document.getElementById("route-details").value = data.data.route_details;
+          document.getElementById("starting-bus-stop").value = data.data.starting_bus_stop;
+          document.getElementById("ending-bus-stop").value = data.data.ending_bus_stop;
+          document.getElementById("preferred-travel-route").value = data.data.preferred_travel_route;
+          document.getElementById("validity-period").value = data.data.validity_period;
+      } else {
+          console.error(data.message);
+      }
+  })
+  .catch(error => console.error("Error:", error));
+
+        
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <form id="travelDetailsForm"  action="save.php" onsubmit="event.preventDefault(); saveTravelData();">
+            <h2>Travel Details</h2>
+            <div class="form-group">
+                <label for="route-details">Route Details:</label>
+                <input type="text" id="route-details" name="route-details" required>
+            </div>
+            <div class="form-group">
+                <label for="starting-bus-stop">Starting Bus Stop:</label>
+                <input type="text" id="starting-bus-stop" name="starting-bus-stop" required>
+            </div>
+            <div class="form-group">
+                <label for="ending-bus-stop">Ending Bus Stop:</label>
+                <input type="text" id="ending-bus-stop" name="ending-bus-stop" required>
+            </div>
+            <div class="form-group">
+                <label for="preferred-travel-route">Preferred Travel Route:</label>
+                <input type="text" id="preferred-travel-route" name="preferred-travel-route" required>
+            </div>
+            <div class="form-group">
+                <label for="validity-period">Required Validity Period:</label>
+                <input type="text" id="validity-period" name="validity-period" required>
+            </div>
+            <div class="submit-container">
+                <input type="button" value="Previous" onclick="window.history.back();">
+                <input type="submit" value="Next">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

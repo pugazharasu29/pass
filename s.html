@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digital Bus Pass</title>
+    <style>
+        .bus-pass {
+            width: 600px;
+            height: 800px;
+            margin: 20px auto;
+            background: #f0f8ff;
+            border: 3px solid #000080;
+            font-family: 'Times New Roman', serif;
+            padding: 25px;
+            position: relative;
+        }
+
+        .official-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000080;
+            letter-spacing: 1px;
+        }
+
+        .sub-title {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .id-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .student-details {
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            margin: 12px 0;
+            font-size: 18px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .address-section {
+            border-right: 2px dashed #000;
+            padding-right: 20px;
+        }
+
+        .office-use {
+            background: #e6e6fa;
+            padding: 15px;
+            border: 1px solid #000;
+        }
+
+        .rules-section {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .signature-section {
+            position: absolute;
+            bottom: 30px;
+            width: 90%;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
+
+        .watermark {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 100px;
+            transform: rotate(-45deg);
+            top: 30%;
+            left: 15%;
+            color: #000080;
+        }
+
+        .pass-photo {
+            position: absolute;
+            right: 30px;
+            top: 120px;
+            width: 150px;
+            border: 2px solid #000;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bus-pass">
+        <div class="watermark">DIGIBUS</div>
+        
+        <!-- Official Header -->
+        <div class="official-header">
+            <div class="main-title">DIGITAL BUS PASS</div>
+            <div class="sub-title">2024 - 2025</div>
+            <div>STUDENT CONCESSION IDENTITY CARD</div>
+        </div>
+
+        <!-- ID Section -->
+        <div class="id-section">
+            <div>ID: DBP-2024-08290</div>
+            <div>VALID TILL: 31-03-2025</div>
+        </div>
+
+        <!-- Student Photo -->
+        <img src="student-photo.jpg" class="pass-photo" alt="Student Photo">
+
+        <!-- Student Details -->
+        <div class="student-details">
+            <div class="detail-item"><strong>NAME:</strong> PUGALYARASU</div>
+            <div class="detail-item"><strong>CLASS:</strong> XII - A</div>
+            <div class="detail-item"><strong>INSTITUTION:</strong> DIGI PUBLIC SCHOOL</div>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="grid-container">
+            <div class="address-section">
+                <div class="detail-item"><strong>RESIDENTIAL ADDRESS:</strong></div>
+                <div>12, Tech Street</div>
+                <div>Digital Nagar</div>
+                <div>Chennai - 600001</div>
+            </div>
+
+            <div class="office-use">
+                <div class="detail-item"><strong>FOR OFFICE USE ONLY</strong></div>
+                <div>RENEWAL COUNTER: ______</div>
+                <div>RENEWAL DATES: ______</div>
+                <div>H-06: ______</div>
+            </div>
+        </div>
+
+        <!-- Rules Section -->
+        <div class="rules-section">
+            <ol>
+                <li>Valid only on specified routes between home and institution</li>
+                <li>Must be shown to conductor on demand</li>
+                <li>Non-transferable and valid only for registered student</li>
+                <li>Report loss immediately to transport office</li>
+                <li>Renewal must be done before expiry date</li>
+            </ol>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div>Authorized Signature: ___________________</div>
+            <div>Institution Contact: 044-1234-5678</div>
+        </div>
+    </div>
+</body>
+</html>

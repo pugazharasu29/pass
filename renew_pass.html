@@ -1,0 +1,97 @@
+<!-- renewal_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Renew Your Pass</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Renew Your Pass</h1>
+    
+    <form id="renewalForm">
+        <!-- Pass Type Selection -->
+        <div>
+            <label>Pass Type:</label>
+            <select id="passType" required>
+                <option value="regular">Regular Pass</option>
+                <option value="premium">Premium Pass</option>
+                <option value="student">Student Pass</option>
+            </select>
+        </div>
+
+        <!-- Route Selection -->
+        <div>
+            <label>Route:</label>
+            <select id="route" required>
+                <option value="route1">Route 1</option>
+                <option value="route2">Route 2</option>
+                <option value="route3">Route 3</option>
+            </select>
+        </div>
+
+        <!-- Renewal Date Selection -->
+        <div>
+            <label>Monthly Renewal Date:</label>
+            <input type="date" id="renewalDate" required 
+                   min="<?php echo date('Y-m-d'); ?>">
+        </div>
+
+        <!-- Payment Section -->
+        <div id="card-element">
+            <!-- Stripe card element will be inserted here -->
+        </div>
+        <div id="card-errors" role="alert"></div>
+
+        <button type="submit">Renew Now</button>
+    </form>
+
+    <script>
+        const stripe = Stripe('your_publishable_key');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        const form = document.getElementById('renewalForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    // Add any additional billing details here
+                },
+            });
+
+            if (error) {
+                document.getElementById('card-errors').textContent = error.message;
+            } else {
+                // Send data to server
+                const formData = {
+                    passType: document.getElementById('passType').value,
+                    route: document.getElementById('route').value,
+                    renewalDate: document.getElementById('renewalDate').value,
+                    paymentMethodId: paymentMethod.id
+                };
+
+                fetch('/process_renewal.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Renewal successful!');
+                        // Redirect or show success message
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

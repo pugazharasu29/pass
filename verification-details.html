@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pass Category</title>
+    <style>
+        .form-container {
+            background: rgba(0, 0, 0, 0.8); /* Dark background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+            width: 100%;
+            color: white; /* Changed text color to white */
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        function savePassCategory() {
+            var passCategory = document.getElementById('pass-category').value;
+            var otherCategory = document.getElementById('other-category').value;
+
+            var data = {
+                passCategory: passCategory,
+                otherCategory: otherCategory
+            };
+
+            localStorage.setItem('passCategoryFormData', JSON.stringify(data));
+            window.location.href = 'educational-employment-detail.html';
+        }
+
+        function toggleOtherCategory() {
+            var passCategory = document.getElementById('pass-category').value;
+            var otherCategoryGroup = document.getElementById('other-category-group');
+            if (passCategory === 'other') {
+                otherCategoryGroup.style.display = 'block';
+            } else {
+                otherCategoryGroup.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <form id="passCategoryForm"  action="save_verification.php"onsubmit="event.preventDefault(); savePassCategory();">
+            <h2>Pass Category</h2>
+            <div class="form-group">
+                <label for="pass-category">Pass Category:</label>
+                <select id="pass-category" name="pass-category" required onchange="toggleOtherCategory()">
+                    <option value="student">Student Pass</option>
+                    <option value="senior-citizen">Senior Citizen Pass</option>
+                    <option value="government-employee">Government Employee Pass</option>
+                    <option value="disability">Disability Pass</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" id="other-category-group" style="display: none;">
+                <label for="other-category">Specify Other Category:</label>
+                <input type="text" id="other-category" name="other-category">
+            </div>
+            <button type="submit">Next</button>
+        </form>
+    </div>
+</body>
+</html>
+
+                   

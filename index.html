@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGI BUS PASS - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: url('pngtree-travel-bus-on-the-way-image_16005789.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: whitesmoke;
+            color: #000000;
+            padding: 13px 25px;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav .title {
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bolder;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav li {
+            font-size: 18px;
+        }
+
+        nav a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: grey;
+        }
+
+        .hero-banner {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-banner h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner p {
+            font-size: 20px;
+        }
+
+        /* Digital Bus Pass Card */
+        .pass-container {
+            display: none;
+            /* hidden until loaded */
+            background-color: lightblue;
+            border: 3px solid darkblue;
+            color: darkblue;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 720px;
+            margin: 30px auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            opacity: 0.95;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pass-container::before {
+            content: "DIGIBUSPASS";
+            position: absolute;
+            opacity: 0.1;
+            font-size: 80px;
+            color: darkblue;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            z-index: 1;
+            pointer-events: none;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pass-card-header {
+            font-size: 28px;
+            color: darkblue;
+            border-bottom: 3px solid darkblue;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pass-card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pass-details {
+            font-size: 18px;
+            line-height: 1.8;
+            flex: 1;
+        }
+
+        .pass-details strong {
+            color: darkblue;
+        }
+
+        .pass-photo-frame {
+            width: 150px;
+            height: 180px;
+            border: 3px solid darkblue;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #e6f0ff;
+            flex-shrink: 0;
+        }
+
+        .pass-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .qr-section {
+            margin-top: 20px;
+            border-top: 2px dashed darkblue;
+            padding-top: 15px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #qrCode {
+            background: white;
+            padding: 10px;
+            border: 2px solid darkblue;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        #qrCode img,
+        #qrCode canvas {
+            max-width: 120px;
+            max-height: 120px;
+        }
+
+        .no-pass-box {
+            display: none;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .no-pass-box h2 {
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .btn-apply {
+            display: inline-block;
+            background: darkblue;
+            color: white;
+            padding: 14px 30px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-apply:hover {
+            background: #00008b;
+        }
+    </style>
+    <link rel="icon" href="bus_1f68c.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="title">
+            DIGI BUS PASS
+            <img src="png-transparent-public-transport-bus-service-travel-transit-bus-bus-logo-angle-hat-logo.png"
+                height="38" width="38">
+        </div>
+        <ul>
+            <li><a href="index.html">Home |</a></li>
+            <li><a href="passanger.html">Passenger |</a></li>
+            <li><a href="conductor.html">Conductor |</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero-banner">
+        <h1>Welcome to Digi Bus Pass Portal</h1>
+        <p>Smart, Secure & Reliable Digital Bus Pass System</p>
+    </div>
+
+    <!-- Active Digital Bus Pass Card -->
+    <div class="pass-container" id="passCard">
+        <div class="pass-card-header">
+            DIGITAL BUS PASS
+        </div>
+        <div class="pass-card-body">
+            <div class="pass-details">
+                <p><strong>Name:</strong> <span id="passName"></span></p>
+                <p><strong>Pass Type:</strong> <span id="passType"></span></p>
+                <p><strong>Validity:</strong> <span id="passValidity"></span></p>
+                <p><strong>Route:</strong> <span id="passRoute"></span></p>
+                <p><strong>Mobile:</strong> <span id="passMobile"></span></p>
+            </div>
+            <div class="pass-photo-frame">
+                <img id="passPhoto" src="" alt="Passenger Photo">
+            </div>
+        </div>
+        <div class="qr-section">
+            <div id="qrCode"></div>
+            <p style="font-weight: bold; margin-top: 8px; font-size: 14px;">SCAN QR TO VERIFY PASS</p>
+        </div>
+    </div>
+
+    <!-- Empty State Box -->
+    <div class="no-pass-box" id="noPassBox">
+        <h2>No Active Bus Pass Found</h2>
+        <p>You can quickly apply for a new digital bus pass in just a few clicks.</p>
+        <a href="digibusform.html" class="btn-apply">Apply For Bus Pass</a>
+    </div>
+
+    <script>
+        function fetchPass() {
+            fetch('fetch_pass.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.name) {
+                        document.getElementById('passCard').style.display = 'block';
+                        document.getElementById('noPassBox').style.display = 'none';
+
+                        document.getElementById('passName').innerText = data.name;
+                        document.getElementById('passType').innerText = data.pass_type;
+                        document.getElementById('passValidity').innerText = data.validity;
+                        document.getElementById('passRoute').innerText = data.route;
+                        document.getElementById('passMobile').innerText = data.mobile_number || 'N/A';
+
+                        const photoEl = document.getElementById('passPhoto');
+                        photoEl.onerror = function () {
+                            this.src = 'user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg';
+                        };
+                        photoEl.src = data.photo && data.photo.trim() !== '' ? data.photo : 'user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg';
+
+                        // Generate Automatic QR Code payload
+                        const qrPayload = JSON.stringify({
+                            id: data.id || 1,
+                            name: data.name,
+                            pass_type: data.pass_type,
+                            validity: data.validity,
+                            route: data.route,
+                            mobile: data.mobile_number
+                        });
+
+                        const qrEl = document.getElementById("qrCode");
+                        qrEl.innerHTML = "";
+                        if (typeof QRCode === 'function') {
+                            new QRCode(qrEl, {
+                                text: qrPayload,
+                                width: 120,
+                                height: 120
+                            });
+                        } else {
+                            qrEl.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrPayload)}" alt="QR Code">`;
+                        }
+                    } else {
+                        document.getElementById('passCard').style.display = 'none';
+                        document.getElementById('noPassBox').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching pass:', error);
+                    document.getElementById('passCard').style.display = 'none';
+                    document.getElementById('noPassBox').style.display = 'block';
+                });
+        }
+        window.onload = fetchPass;
+    </script>
+</body>
+
+</html>
