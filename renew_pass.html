@@ -1,97 +1,223 @@
-<!-- renewal_form.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Renew Your Pass</title>
-    <script src="https://js.stripe.com/v3/"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renew Bus Pass - DIGI BUS PASS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: url('pngtree-travel-bus-on-the-way-image_16005789.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: whitesmoke;
+            color: #000000;
+            padding: 13px 25px;
+            justify-content: space-between;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+        }
+
+        nav .title {
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bolder;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav li {
+            font-size: 18px;
+        }
+
+        nav a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: grey;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 550px;
+            margin: 30px auto;
+        }
+
+        .form-container h2 {
+            color: darkblue;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid darkblue;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #000055;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            background: darkblue;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #00008b;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Renew Your Pass</h1>
-    
-    <form id="renewalForm">
-        <!-- Pass Type Selection -->
-        <div>
-            <label>Pass Type:</label>
-            <select id="passType" required>
-                <option value="regular">Regular Pass</option>
-                <option value="premium">Premium Pass</option>
-                <option value="student">Student Pass</option>
-            </select>
+    <nav>
+        <div class="title">
+            DIGI BUS PASS
+            <img src="png-transparent-public-transport-bus-service-travel-transit-bus-bus-logo-angle-hat-logo.png"
+                height="34" width="34">
         </div>
+        <ul>
+            <li><a href="index.html">Home |</a></li>
+            <li><a href="passanger.html">Passenger |</a></li>
+            <li><a href="conductor.html">Conductor |</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
 
-        <!-- Route Selection -->
-        <div>
-            <label>Route:</label>
-            <select id="route" required>
-                <option value="route1">Route 1</option>
-                <option value="route2">Route 2</option>
-                <option value="route3">Route 3</option>
-            </select>
-        </div>
+    <div class="form-container">
+        <h2>Renew Existing Bus Pass</h2>
+        <form id="renewForm">
+            <div class="form-group">
+                <label for="passId">Pass ID or Serial Number:</label>
+                <input type="number" id="passId" name="id" placeholder="e.g. 1" required>
+            </div>
 
-        <!-- Renewal Date Selection -->
-        <div>
-            <label>Monthly Renewal Date:</label>
-            <input type="date" id="renewalDate" required 
-                   min="<?php echo date('Y-m-d'); ?>">
-        </div>
+            <div class="form-group">
+                <label for="renewalDuration">Renewal Period:</label>
+                <select id="renewalDuration" onchange="calculateNewDate()">
+                    <option value="30">1 Month (30 Days)</option>
+                    <option value="90">3 Months (Quarterly)</option>
+                    <option value="180">6 Months (Half-Yearly)</option>
+                    <option value="365">1 Year (365 Days)</option>
+                </select>
+            </div>
 
-        <!-- Payment Section -->
-        <div id="card-element">
-            <!-- Stripe card element will be inserted here -->
-        </div>
-        <div id="card-errors" role="alert"></div>
+            <div class="form-group">
+                <label for="endDate">New Expiration Date:</label>
+                <input type="date" id="endDate" name="end_date" required>
+            </div>
 
-        <button type="submit">Renew Now</button>
-    </form>
+            <div class="form-group">
+                <label>Renewal Fee: <strong style="color:#28a745;">₹500.00</strong></label>
+            </div>
+
+            <button type="submit" class="btn-submit" id="renewBtn">Renew Bus Pass</button>
+        </form>
+    </div>
 
     <script>
-        const stripe = Stripe('your_publishable_key');
-        const elements = stripe.elements();
-        const cardElement = elements.create('card');
-        cardElement.mount('#card-element');
+        function calculateNewDate() {
+            const days = parseInt(document.getElementById('renewalDuration').value) || 30;
+            const target = new Date();
+            target.setDate(target.getDate() + days);
+            document.getElementById('endDate').value = target.toISOString().split('T')[0];
+        }
 
-        const form = document.getElementById('renewalForm');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const endInput = document.getElementById('endDate');
+            endInput.min = today;
+            calculateNewDate();
 
-            const { error, paymentMethod } = await stripe.createPaymentMethod({
-                type: 'card',
-                card: cardElement,
-                billing_details: {
-                    // Add any additional billing details here
-                },
-            });
+            const urlParams = new URLSearchParams(window.location.search);
+            const pid = urlParams.get('id');
+            if (pid) document.getElementById('passId').value = pid;
+        });
 
-            if (error) {
-                document.getElementById('card-errors').textContent = error.message;
-            } else {
-                // Send data to server
-                const formData = {
-                    passType: document.getElementById('passType').value,
-                    route: document.getElementById('route').value,
-                    renewalDate: document.getElementById('renewalDate').value,
-                    paymentMethodId: paymentMethod.id
-                };
+        document.getElementById('renewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('renewBtn');
+            btn.disabled = true;
+            btn.innerText = 'Processing Renewal...';
 
-                fetch('/process_renewal.php', {
+            const passId = document.getElementById('passId').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const formData = new FormData();
+            formData.append('id', passId);
+            formData.append('end_date', endDate);
+
+            try {
+                const res = await fetch('renew_pass.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        alert('Renewal successful!');
-                        // Redirect or show success message
-                    } else {
-                        alert('Error: ' + result.error);
-                    }
+                    body: formData
                 });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert('Bus Pass Renewed Successfully!');
+                    window.location.href = `buspassgenerator002.html?id=${passId}`;
+                } else {
+                    alert('Renewal Error: ' + (data.message || 'Pass not found'));
+                    btn.disabled = false;
+                    btn.innerText = 'Renew Bus Pass';
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+                btn.disabled = false;
+                btn.innerText = 'Renew Bus Pass';
             }
         });
     </script>
 </body>
+
 </html>

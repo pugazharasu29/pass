@@ -221,9 +221,15 @@
     <!-- Scanned Pass Result Modal -->
     <div class="result-modal" id="resultModal">
         <div class="result-card">
-            <span class="status-badge">PASS VERIFIED ✓</span>
+            <span class="status-badge" id="resStatusBadge">PASS VERIFIED ✓</span>
             <h3>DIGITAL PASS DETAILS</h3>
+            <div style="text-align:center; margin-bottom:12px;">
+                <img id="resPhoto" src="user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg"
+                     style="width:90px; height:110px; object-fit:cover; border:2px solid darkblue; border-radius:6px;">
+            </div>
+            <p><strong>Pass Number:</strong> <span id="resPassNo">DBP-000001</span></p>
             <p><strong>Passenger Name:</strong> <span id="resName"></span></p>
+            <p><strong>Category:</strong> <span id="resCategory"></span></p>
             <p><strong>Pass Type:</strong> <span id="resType"></span></p>
             <p><strong>Validity:</strong> <span id="resValidity"></span></p>
             <p><strong>Route:</strong> <span id="resRoute"></span></p>
@@ -234,11 +240,30 @@
 
     <script>
         function showPassModal(data) {
-            document.getElementById('resName').textContent = data.name || data.full_name || 'N/A';
-            document.getElementById('resType').textContent = data.pass_type || 'N/A';
+            const passNo = data.pass_no || data.pass_number || (data.id ? `DBP-${String(data.id).padStart(6, '0')}` : 'DBP-VERIFIED');
+            document.getElementById('resPassNo').textContent = passNo;
+            document.getElementById('resName').textContent = data.name || data.full_name || 'Passenger';
+            document.getElementById('resCategory').textContent = (data.category || data.pass_category || 'General').toUpperCase();
+            document.getElementById('resType').textContent = (data.pass_type || 'Monthly').toUpperCase();
             document.getElementById('resValidity').textContent = data.validity || `${data.start_date || ''} to ${data.end_date || ''}`;
             document.getElementById('resRoute').textContent = data.route || `${data.route_number || ''} (${data.source_location || ''} to ${data.destination_location || ''})`;
             document.getElementById('resMobile').textContent = data.mobile || data.mobile_number || 'N/A';
+
+            const photoEl = document.getElementById('resPhoto');
+            if (data.photo) {
+                photoEl.src = data.photo;
+            } else {
+                photoEl.src = 'user-icon-for-web-site-login-head-sign-icon-design-free-vector.jpg';
+            }
+
+            const badge = document.getElementById('resStatusBadge');
+            if (data.status === 'PENDING' || data.payment_status === 'cash_pending') {
+                badge.style.background = '#e67e22';
+                badge.textContent = 'CASH - PENDING COUNTER PAYMENT';
+            } else {
+                badge.style.background = '#28a745';
+                badge.textContent = 'PASS VERIFIED & ACTIVE ✓';
+            }
 
             document.getElementById('resultModal').style.display = 'flex';
         }
@@ -253,14 +278,29 @@
                 const passData = JSON.parse(decodedText);
                 showPassModal(passData);
             } catch (e) {
-                // Raw text scanned
-                showPassModal({
-                    name: 'Scanned Pass',
-                    pass_type: 'Digital Pass',
-                    validity: 'Active',
-                    route: decodedText,
-                    mobile: 'Verified'
-                });
+                // If it's a verification URL or Pass ID
+                const matchId = decodedText.match(/(?:verify\/|id=)(\d+)/i);
+                if (matchId && matchId[1]) {
+                    fetch(`get_pass_data.php?id=${matchId[1]}`)
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.status === 'success' && res.passData) {
+                                showPassModal(res.passData);
+                            } else {
+                                alert('Pass ID ' + matchId[1] + ' not found in system!');
+                            }
+                        })
+                        .catch(err => alert('Verification fetch error: ' + err.message));
+                } else {
+                    // Raw text scanned
+                    showPassModal({
+                        name: 'Scanned Pass',
+                        pass_type: 'Digital Pass',
+                        validity: 'Active',
+                        route: decodedText,
+                        mobile: 'Verified'
+                    });
+                }
             }
         }
 
